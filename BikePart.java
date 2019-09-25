@@ -1,4 +1,3 @@
-
 /**
  * BikePart represents the aspects that compose a piece of a bike and its respective prices (part name, part number, list price, sale price,and if the part is on sale)
  *
@@ -12,18 +11,19 @@ public class BikePart
     private double listPrice;
     private double salePrice;
     private boolean onSale;
+    private int quantity;
 
     /**
      * Constructor for objects of class BikePart
      */
-    public BikePart(String partName, int partNum, double listPrice,double salePrice, boolean onSale)
+    public BikePart(String partName, int partNum, double listPrice,double salePrice, boolean onSale,int quantity)
     {
         this.partName = partName;
         this.partNum = partNum;
         this.listPrice = listPrice;
         this.salePrice = salePrice;
         this.onSale = onSale;
-
+        this.quantity = quantity;
     }
 
     public String getPartName()
@@ -69,7 +69,7 @@ public class BikePart
     }
 
     public void printInfo(){
-        System.out.println(partName+","+partNum+","+listPrice+","+salePrice+","+onSale);
+        System.out.println(partName+","+partNum+","+listPrice+","+salePrice+","+onSale+","+quantity);
     }
 
 }
