@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.io.*;
-import java.util.Scanner;
 /**
  * Write a description of class Warehouse here.
  *
@@ -9,57 +7,39 @@ import java.util.Scanner;
  */
 public class Warehouse
 {
-    private ArrayList<BikePart> inWarehouse;
-    private static int numParts;
-    /**
-     * Constructor for objects of class Warehouse
-     */
-    public Warehouse()
+    private String partName;
+    ArrayList<BikePart> inWarehouse= new ArrayList<BikePart>();
+    ArrayList<Inventory> Deliver = new ArrayList<Inventory>();
+
+    public void displayPart(String partName)
     {
-        ArrayList<BikePart> inWarehouse = new ArrayList<BikePart>();
-        this.numParts = readDatabase(inWarehouse);
+String name = partName;
+        for(int i =0; i < inWarehouse.size(); i++){
+            if(name.equals(inWarehouse.get(i).getName()))
+            {
+                System.out.println(inWarehouse.get(i).printInfo());
+            }
+            else{
+                System.out.println("Name is not in file");
+            }
+        }
+
     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  inWarehouse  ArrayList that will contain list of bike parts in the warehouse
-     * @return void   
-     */
-    public static int readDatabase(ArrayList inWarehouse) 
+    public void addPart(BikePart part)
     {
-        try{
-            String partName;
-            int partNum;
-            double listPrice;
-            double salePrice;
-            boolean saleStatus;
-            int quantity;
-            FileInputStream fileIn = new FileInputStream("warehouseDB.txt");
-            Scanner scanIn = new Scanner(fileIn);
-            while(scanIn.hasNextLine()){
-                String info = scanIn.nextLine();
-                String[] infoHolder = info.split(",");
-                partName = infoHolder[0];
-                partNum = Integer.parseInt(infoHolder[1]);
-                listPrice = Double.parseDouble(infoHolder[2]);
-                salePrice = Double.parseDouble(infoHolder[3]);
-                saleStatus = Boolean.parseBoolean(infoHolder[4]);
-                quantity = Integer.parseInt(infoHolder[5]);
-                BikePart part = new BikePart(partName, partNum, listPrice, salePrice, saleStatus, quantity);
-                inWarehouse.add(part);
-                numParts++;
+        for ( int j =0; j < Deliver.size(); j++)
+        {if(Deliver.get(j).size().equals(inWarehouse.get(j).part()))
+            {
+                Deliver.get(j).size()= inWarehouse.get(j).part();
             }
-            fileIn.close();
+            else if(!Deliver.get(j).size().equals(inWarehouse.get(j).part()))
+            {
+                Deliver.add(part);
+            }
+
         }
-        catch (FileNotFoundException e){
-            System.out.println("File Not Found. Please restart and enter new file name.");
-            e.printStackTrace();
-        }
-        catch (IOException e){
-            System.out.print("IOException. Please restart.");
-            e.printStackTrace();
-        }
-        return numParts;
+        
+
     }
 }
