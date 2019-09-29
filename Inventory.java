@@ -1,55 +1,57 @@
+package com.company;
+
+import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
-/**
- * Write a description of class Inventory here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
-public class Inventory
-{
-    private static int numParts;
-    private BikePart part;
-    private ArrayList<BikePart> inventory;
-
     /**
-     * Constructor for objects of class Inventory
-     */
-    public Inventory()
-    {
-        inventory = new ArrayList<BikePart>();
-        this.numParts = readDelivery(inventory);
-    }
-    
-    public int getNumParts(){
-        return this.numParts;
-    }
-    
-    public ArrayList getInventory(){
-        return this.inventory;
-    }
-    
-    /**
-     * An example of a method - replace this comment with your own
+     * Write a description of class Inventory here.
      *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
+     * @author (your name)
+     * @version (a version number or a date)
      */
-    public int readDelivery(ArrayList inventory) 
-    {
-        Scanner scnr = new Scanner(System.in);
+    public class Inventory {
+        private static int numParts;
+        private BikePart part;
+        private ArrayList<BikePart> inventory;
 
-        //System.out.println();
-        //String fileName = scnr.next();
-        
-        String partName;
-        int partNum;
-        double listPrice;
-        double salePrice;
-        boolean saleStatus;
-        int quantity;
-        //while(scanIn.hasNext()){
+        /**
+         * Constructor for objects of class Inventory
+         */
+        public Inventory()
+        {
+            inventory = new ArrayList<BikePart>();
+            this.numParts = readDelivery(inventory);
+        }
+
+        public int getNumParts(){
+            return this.numParts;
+        }
+
+        public ArrayList getInventory(){
+            return this.inventory;
+        }
+
+        /**
+         * An example of a method - replace this comment with your own
+         *
+         * @param  //a sample parameter for a method
+         * @return    the sum of x and y
+         */
+        public int readDelivery(ArrayList inventory)
+        {
+            Scanner scnr = new Scanner(System.in);
+
+            //System.out.println();
+            //String fileName = scnr.next();
+
+            String partName;
+            int partNum;
+            double listPrice;
+            double salePrice;
+            boolean saleStatus;
+            int quantity;
+            //while(scanIn.hasNext()){
             try{
                 FileInputStream fileIn = new FileInputStream("inventory.txt");
                 Scanner scanIn = new Scanner(fileIn);
@@ -78,7 +80,24 @@ public class Inventory
                 System.out.println("IO Exception. Please restart.");
                 e.printStackTrace();
             }
-        //}
-        return numParts;
+            //}
+            return numParts;
+        }
+
+        /**method takes warehouse array printing out to warehouseDB.txt
+         *
+         * @param warehouse
+         * @throws FileNotFoundException
+         * @throws IOException
+         */
+        public static void printOutWarehouseDB(Warehouse warehouse) throws FileNotFoundException, IOException{
+            FileOutputStream fileOut = new FileOutputStream(warehouseDB.txt);
+            PrintWriter out = new PrintWriter(fileOut);
+                for(int i = 0; i < warehouse.getWarehouse().size()-1; i++){
+                    out.write(warehouse.getWarehouse().get(i).printInfo());
+                    out.write("\n");
+                    out.flush();
+                }
+                fileOut.close();
+        }
     }
-}
