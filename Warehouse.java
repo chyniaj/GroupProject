@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class Warehouse {
 
+   /**
+    This method will sort the ArrayList items by number order.
+   */
     public static void sortNumber(ArrayList<BikePart> list){
 
         int x = list.size();
@@ -18,6 +21,9 @@ public class Warehouse {
         }
 
     }
+    /**
+     This method will sort the ArrayList items by name order.
+    */
     public static void sortName(ArrayList<BikePart> list) {
         int x = list.size();
         for (int i = 0; i < x; i++){
