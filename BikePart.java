@@ -4,7 +4,7 @@
  * @author Kerri Lynch
  * @version 9/10/19
  */
-public class BikePart
+public class BikePart implements Comparable<BikePart>
 {
     private String partName;
     private int partNum;
@@ -48,28 +48,43 @@ public class BikePart
         return this.onSale;
     }
     
-    public void setPartName(){
+    public int getQuantity(){
+        return this.quantity;
+    }
+    
+    public void setPartName(String partName){
         this.partName = partName;
     }
     
-    public void setPartNum(){
+    public void setPartNum(int partNum){
         this.partNum = partNum;
     }
     
-    public void setListPrice(){
+    public void setListPrice(double listPrice){
         this.listPrice = listPrice;
     }
     
-    public void setSalePrice(){
+    public void setSalePrice(double salePrice){
         this.salePrice = salePrice;
     }
     
-    public void setSaleStatus(){
+    public void setSaleStatus(boolean onSale){
         this.onSale = onSale;
+    }
+    
+    public void setQuantity(int quantity){
+        this.quantity=quantity;
     }
 
     public void printInfo(){
         System.out.println(partName+","+partNum+","+listPrice+","+salePrice+","+onSale+","+quantity);
+    }
+    
+    public int compareTo(BikePart o) {
+        int compareInt = this.partName.compareTo(o.partName);
+        if (compareInt < 0) return -1;
+        if (compareInt > 0) return 1;
+        return 0;
     }
 
 }
