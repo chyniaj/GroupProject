@@ -194,4 +194,52 @@ public class Van
             }
         }
     }
+
+    public static void mainToVanComparison(Van v, Warehouse w, ArrayList<BikePart> transport){
+
+        for (int i=0; i<w.getWarehouse().size(); i++){
+            String temp = w.getWarehouse().get(i).getPartName();
+
+            for (int j=0; j<v.getWarehouse().size();j++){
+                String temp2 = v.getWarehouse().get(j).getPartName();
+                if(temp.equals(temp2)){ //be aware of lower or uppercase AND TRIM!!!
+                    BikePart temp3 = v.getWarehouse().get(j);
+                    v.getWarehouse().remove(v.getWarehouse().get(j));
+                }
+            }
+        }
+
+    }
+
+    public static void updateVanhouseDB(Van v,ArrayList<BikePart> transport2){
+
+        for (int i=0; i<transport2.size(); i++){
+
+            String name = v.getWarehouse().get(i).getPartName();
+
+            if (v.getWarehouse().size() == 0){
+                BikePart part = transport2.get(i);
+
+                v.getWarehouse().add(part);
+            }
+            else{
+                for (int j=0; j<v.getWarehouse().size();j++){
+
+                    String name2 = v.getWarehouse().get(j).getPartName();
+                    if(name.equals(name2)){ //be aware of lower or uppercase AND TRIM!!!
+                        int quant = transport2.get(i).getQuantity();
+                        int quant2 = v.getWarehouse().get(j).getQuantity();
+                        v.getWarehouse().get(j).setQuantity(quant+quant2);
+
+                    }
+                    else if(!(name.equals(name2)) && j == v.getWarehouse().size()){
+                        BikePart part = transport2.get(i);
+                        v.getWarehouse().add(part);
+                    }
+
+                }
+            }
+        }
+    }
 }
+
