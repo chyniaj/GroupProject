@@ -13,6 +13,7 @@ public class Van
     private ArrayList<BikePart> inventory = new ArrayList<BikePart>();
     private ArrayList<BikePart> warehouse = new ArrayList<BikePart>();
     private String vanName;
+    private int numParts;
 
     /**
      * Constructor for objects of class Van
@@ -26,6 +27,7 @@ public class Van
         readVanWarehouse(warehouse,vanName);
         this.inventory = inventory;
         this.warehouse = warehouse;
+        numParts = warehouse.size();
     }
 
     /**
@@ -44,10 +46,19 @@ public class Van
         return this.inventory;
     } 
 
+    public int getNumParts(){
+        return warehouse.size();
+    }
+    
     public String getVanName(){
         return this.vanName;
     }
 
+    /**
+     * This method reads the van warehouse from a text file 
+     * @param inventory
+     * @param vanName
+     */
     public static void readVanWarehouse(ArrayList<BikePart> warehouse, String vanName)
     {
         try{
@@ -86,6 +97,11 @@ public class Van
 
     }
 
+    /**
+     * This method reads the van inventory from a text file 
+     * @param inventory
+     * @param vanName
+     */
     public static void readVanInventory(ArrayList<BikePart> inventory, String vanName){
         try{
             String partName;
@@ -122,6 +138,12 @@ public class Van
         }
     }
 
+    /**
+     * this method will print the Van warehouse back out to the Warehouse text file
+     * @param v
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public static void printOutVanWarehouse(Van v) throws FileNotFoundException, IOException{
         FileOutputStream fileOut = new FileOutputStream(v.getVanName()+"warehouse.txt");
         PrintWriter out = new PrintWriter(fileOut);
@@ -133,6 +155,12 @@ public class Van
         fileOut.close();
     }
 
+    /**
+     * this method will print the Van inventory back out to the inventory text file
+     * @param v
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public static void printOutVanInventory(Van v) throws FileNotFoundException, IOException{
         FileOutputStream fileOut = new FileOutputStream(v.getVanName()+"inventory.txt");
         PrintWriter out = new PrintWriter(fileOut);
@@ -145,9 +173,10 @@ public class Van
     }
 
     /**
-     * Updates warehouse ArrayList and prints it out to the warehouseDB.txt file
-     * 
-     * @param inventory, warehouse Objects of type Inventory and Warehouse
+     * this method compares a van's inventory to a van's warehouse and checks to see if there are parts that is needed.
+     * @param van1
+     * @param van2
+     * @param transport
      */
     public static void vanToVanComparison(Van van1, Van van2, ArrayList<BikePart> transport){
         if (van2.getWarehouse().size() == 0){
@@ -168,6 +197,11 @@ public class Van
         }
     }
 
+    /**
+     * This method updates a van's warehouse
+     * @param van1
+     * @param transport
+     */
     public static void vanUpdateWarehouse(Van van1, ArrayList<BikePart> transport){
         for (int i=0; i<transport.size(); i++){
             String temp = transport.get(i).getPartName();
@@ -195,11 +229,15 @@ public class Van
         }
     }
 
-    public static void mainToVanComparison(Van v, Warehouse w, ArrayList<BikePart> transport){
-
+    /**
+     * The method compares the Main warehouse with a van's warehouse and checks to see if there are parts that is needed.
+     * @param v
+     * @param w
+     * @param transport2
+     */
+    public static void mainToVanComparison(Van v, Warehouse w, ArrayList<BikePart> transport2){
         for (int i=0; i<w.getWarehouse().size(); i++){
             String temp = w.getWarehouse().get(i).getPartName();
-
             for (int j=0; j<v.getWarehouse().size();j++){
                 String temp2 = v.getWarehouse().get(j).getPartName();
                 if(temp.equals(temp2)){ //be aware of lower or uppercase AND TRIM!!!
@@ -208,35 +246,32 @@ public class Van
                 }
             }
         }
-
     }
-
+    
+    /**
+     * This method updates a van's warehouseDB
+     * @param v
+     * @param transport2
+     */
     public static void updateVanhouseDB(Van v,ArrayList<BikePart> transport2){
-
         for (int i=0; i<transport2.size(); i++){
-
             String name = v.getWarehouse().get(i).getPartName();
-
             if (v.getWarehouse().size() == 0){
                 BikePart part = transport2.get(i);
-
                 v.getWarehouse().add(part);
             }
             else{
                 for (int j=0; j<v.getWarehouse().size();j++){
-
                     String name2 = v.getWarehouse().get(j).getPartName();
                     if(name.equals(name2)){ //be aware of lower or uppercase AND TRIM!!!
                         int quant = transport2.get(i).getQuantity();
                         int quant2 = v.getWarehouse().get(j).getQuantity();
                         v.getWarehouse().get(j).setQuantity(quant+quant2);
-
                     }
                     else if(!(name.equals(name2)) && j == v.getWarehouse().size()){
                         BikePart part = transport2.get(i);
                         v.getWarehouse().add(part);
                     }
-
                 }
             }
         }
