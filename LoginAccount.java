@@ -5,6 +5,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.SecretKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Random;
 /**
  * Write a description of class LoginAccount here.
@@ -14,48 +15,32 @@ import java.util.Random;
  */
 public class LoginAccount 
 {
-    // instance variables - replace the example below with your own
-    protected String username;
-    protected String password;
-    protected Person user;
-    protected byte[] encryptedPassword;
-   
+       //private Person person;
+    private String username;
+    private byte[] password;
+     Random r = new Random();
+     byte[] nbyte = new byte[32];
 
-    /**
-     * Constructor for objects of class LoginAccount
-     */
-    public LoginAccount(Person user,String username, String password)
-    {
-        username = this.username;
-        password = this.password;
-        user = this.user;
-        encryptedPassword = scramblePassword(password);
-    }
 
     public LoginAccount(){
-        username = "user123";
-        password = "testing123";
-        user = new Person();
-    }
 
+    }
+    public LoginAccount( String username, String password) {
+        //this.person = person;
+        this.username = username;
+        r.nextBytes(nbyte);
+        this.password = hashPassword(password.toCharArray(),nbyte,5,256);
+    }
     public String getUsername()
     {
         return this.username;
     }
 
-    public String getPassword(){
+    public byte[] getPassword(){
         return this.password;
     }
+    
 
-    public static byte[] scramblePassword(String password){
-        Random r = new Random();
-        final byte[] nbyte = new byte[20];
-        r.nextBytes(nbyte);
-        final byte[] scrambledPassword;
-        final int iterations = 5;
-        final int keyLength = 256;
-       return scrambledPassword = hashPassword(password.toCharArray(), nbyte, iterations, keyLength);
-    }
     public static byte[] hashPassword( final char[] password, final byte[] salt, final int iterations, final int keyLength ) {
         try{
         SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
@@ -68,7 +53,21 @@ public class LoginAccount
     catch( NoSuchAlgorithmException | InvalidKeySpecException e ) {
         throw new RuntimeException( e );
     }
+    }
+    
+     public String logIn(String userName, String Password){
+        String logIn = "false";
+        byte[] newPass = hashPassword(Password.toCharArray(),nbyte,5,256);
+        System.out.println(Arrays.toString(newPass));
+        System.out.println(Arrays.toString(this.password));
+        System.out.println(Arrays.equals(this.password, newPass));
+        if ((username.equals(this.getUsername())) && (Arrays.equals(this.password, newPass))) {
+            logIn = "true";
+            return logIn;
+        }
+        else{
+            return logIn;
+        }
+}
+}
         
-}
-}
-
