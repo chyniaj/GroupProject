@@ -10,7 +10,6 @@ import java.util.Scanner;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import com.mycompany.cpscproject.BikePart;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,10 +17,9 @@ import java.time.ZoneId;
  *
  * @author kerri
  */
-public class Warehouse implements Iterator<BikePart>{
+public class Warehouse {
     private ArrayList<BikePart> warehouse;
     private static int numParts;
-    private Iterator iterator;
     /**
      * Constructor for objects of class Warehouse
      */
@@ -216,14 +214,14 @@ public class Warehouse implements Iterator<BikePart>{
      * @param warehouseNumParts number of parts in the warehouse
      * @param warehouse, part ArrayList from Warehouse and a bikepart user wishes to adds
      */
-    public void sell(int warehouseNumParts, Warehouse warehouse)
+    public void sell(int warehouseNumParts, Warehouse warehouse, String tempName, int tempQuant)
     {
         
-        Scanner sellscn = new Scanner(System.in);
+        /*Scanner sellscn = new Scanner(System.in);
         System.out.println("Enter the number of the part you'd like to sell:");
         int partNumber = sellscn.nextInt();
         System.out.println("Enter the amount you'd like to sell:");
-        int quantity = sellscn.nextInt();
+        int quantity = sellscn.nextInt();*/
         
         System.out.println("Time of sale:");
         Instant timestamp = Instant.now();
@@ -231,42 +229,26 @@ public class Warehouse implements Iterator<BikePart>{
         System.out.printf("%s %d %d at %d:%d%n", ldt.getMonth(), ldt.getDayOfMonth(), ldt.getYear(), ldt.getHour(), ldt.getMinute());
         
         for (int i=0; i<warehouse.getWarehouse().size(); i++){
-            int number = warehouse.getWarehouse().get(i).getPartNum();
+            String name = warehouse.getWarehouse().get(i).getPartName();
 
             if (warehouseNumParts == 0){
                 System.out.println("There is nothing to sell.");
             }
             else{
-                if(number == partNumber){ 
-                int temp = warehouse.getWarehouse().get(i).getQuantity() - quantity;
-                
-                if(temp == 0 || temp < 0){
-                    warehouse.getWarehouse().remove(i);
-                    System.out.println("All of this part has been sold. Part removed from warehouse.");
+                if(name.equalsIgnoreCase(tempName)){ 
+                    int temp = warehouse.getWarehouse().get(i).getQuantity() - tempQuant;
+                    
+                    if(temp == 0 || temp < 0){
+                        warehouse.getWarehouse().remove(i);
+                        System.out.println("All of this part has been sold. Part removed from warehouse.");
+                    }
+                    else if (temp > 0){
+                        warehouse.getWarehouse().get(i).setQuantity(temp);
+                        System.out.println(tempQuant+" of the specified part have been sold. "+temp+" of this part remain in the warehouse.");
+                    }
                 }
-                else if (temp > 0){
-                    warehouse.getWarehouse().get(i).setQuantity(temp);
-                    System.out.println(quantity+" of the specified part have been sold. "+temp+" of this part remain in the warehouse.");
-                }
-                }
-            }
-        
-            
+            } 
         }
 
-    }
-    
-    public Iterator<BikePart> getIterator(){
-        return warehouse.iterator();
-    }
-
-    @Override
-    public boolean hasNext() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public BikePart next() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
