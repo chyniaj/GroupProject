@@ -1,12 +1,20 @@
 package com.mycompany.cpscproject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.SecretKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 /**
  * Write a description of class LoginAccount here.
  *
@@ -15,7 +23,7 @@ import java.util.Random;
  */
 public class LoginAccount 
 {
-       //private Person person;
+    private Person person;
     private String username;
     private byte[] password;
      Random r = new Random();
@@ -25,7 +33,7 @@ public class LoginAccount
     public LoginAccount(){
 
     }
-    public LoginAccount( String username, String password) {
+    public LoginAccount(String username, String password) {
         //this.person = person;
         this.username = username;
         r.nextBytes(nbyte);
@@ -69,5 +77,83 @@ public class LoginAccount
             return logIn;
         }
 }
+     public static void readInStaff(ArrayList<LoginAccount> list) throws IOException{
+         try{
+         String tempUser;
+         String tempPassword;
+         Scanner input = new Scanner(System.in);
+         System.out.println("Enter name of file containing the staff information:");
+         String fileName = input.next();
+         
+         File file = new File(fileName);
+         FileInputStream fileIn = new FileInputStream(file);
+         
+         input.close();
+         Scanner scanIn = new Scanner(fileIn);
+            while(scanIn.hasNextLine()){
+                String info = scanIn.nextLine();
+                info = info.trim();
+                String[] infoHolder = info.split(",");
+                tempUser = infoHolder[0];
+                tempPassword = infoHolder[1];
+                LoginAccount staff = new LoginAccount(tempUser,tempPassword);
+                list.add(staff);
+            }
+            fileIn.close();
+         }
+            catch (FileNotFoundException e){
+            System.out.println("File Not Found. Please restart and enter new file name.");
+            e.printStackTrace();
+        }
+        catch (IOException e){
+            System.out.print("IOException. Please restart.");
+            e.printStackTrace();
+        }
+        }
+     
+         
+         public static void readInSA(ArrayList<SalesAssociate> list){
+         try{
+         String tempUser;
+         String tempPassword;
+         double totalEarnings;
+         Scanner input = new Scanner(System.in);
+         System.out.println("Enter name of file containing the staff information:");
+         String fileName = input.next();
+         
+         File file = new File(fileName+".txt");
+         FileInputStream fileIn = new FileInputStream(file);
+         
+         input.close();
+         Scanner scanIn = new Scanner(fileIn);
+            while(scanIn.hasNextLine()){
+                String info = scanIn.nextLine();
+                info = info.trim();
+                String[] infoHolder = info.split(",");
+                tempUser = infoHolder[0];
+                tempPassword = infoHolder[1];
+                totalEarnings = Double.parseDouble(infoHolder[2]);
+                SalesAssociate staff = new SalesAssociate(tempUser,tempPassword);
+                staff.setTotalEarnings(totalEarnings);
+                list.add(staff);
+            }
+            fileIn.close();
+        }
+        
+        catch (FileNotFoundException e){
+            System.out.println("File Not Found. Please restart and enter new file name.");
+            e.printStackTrace();
+        }
+        catch (IOException e){
+            System.out.print("IOException. Please restart.");
+            e.printStackTrace();
+        }
+
+     }
+     
+     public static void printOutStaff(ArrayList<LoginAccount> staff) throws FileNotFoundException{
+         FileOutputStream fileOut = new FileOutputStream("SalesInvoice.txt");
+         PrintWriter out = new PrintWriter(fileOut);
+     }
 }
         
