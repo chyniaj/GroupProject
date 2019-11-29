@@ -66,9 +66,6 @@ public class LoginAccount
      public String logIn(String userName, String Password){
         String logIn = "false";
         byte[] newPass = hashPassword(Password.toCharArray(),nbyte,5,256);
-        System.out.println(Arrays.toString(newPass));
-        System.out.println(Arrays.toString(this.password));
-        System.out.println(Arrays.equals(this.password, newPass));
         if ((username.equals(this.getUsername())) && (Arrays.equals(this.password, newPass))) {
             logIn = "true";
             return logIn;
@@ -77,18 +74,17 @@ public class LoginAccount
             return logIn;
         }
 }
-     public static void readInStaff(ArrayList<LoginAccount> list) throws IOException{
+     public static void readInWM(ArrayList<WarehouseManager> warehouseManagers) throws IOException{
          try{
          String tempUser;
          String tempPassword;
          Scanner input = new Scanner(System.in);
-         System.out.println("Enter name of file containing the staff information:");
+         System.out.println("Enter name of file containing the Warehouse Manager information:");
          String fileName = input.next();
          
-         File file = new File(fileName);
+         File file = new File(fileName+".txt");
          FileInputStream fileIn = new FileInputStream(file);
          
-         input.close();
          Scanner scanIn = new Scanner(fileIn);
             while(scanIn.hasNextLine()){
                 String info = scanIn.nextLine();
@@ -96,8 +92,8 @@ public class LoginAccount
                 String[] infoHolder = info.split(",");
                 tempUser = infoHolder[0];
                 tempPassword = infoHolder[1];
-                LoginAccount staff = new LoginAccount(tempUser,tempPassword);
-                list.add(staff);
+                WarehouseManager staff = new WarehouseManager(tempUser,tempPassword);
+                warehouseManagers.add(staff);
             }
             fileIn.close();
          }
@@ -111,20 +107,50 @@ public class LoginAccount
         }
         }
      
+          public static void readInOM(ArrayList<OfficeManager> list) throws IOException{
+         try{
+         String tempUser;
+         String tempPassword;
+         Scanner input = new Scanner(System.in);
+         System.out.println("Enter name of file containing the Office Manager information:");
+         String fileName = input.next();
          
+         File file = new File(fileName+".txt");
+         FileInputStream fileIn = new FileInputStream(file);
+         
+         Scanner scanIn = new Scanner(fileIn);
+            while(scanIn.hasNextLine()){
+                String info = scanIn.nextLine();
+                info = info.trim();
+                String[] infoHolder = info.split(",");
+                tempUser = infoHolder[0];
+                tempPassword = infoHolder[1];
+                OfficeManager staff = new OfficeManager(tempUser,tempPassword);
+                list.add(staff);
+            }
+            fileIn.close();
+         }
+            catch (FileNotFoundException e){
+            System.out.println("File Not Found. Please restart and enter new file name.");
+            e.printStackTrace();
+        }
+        catch (IOException e){
+            System.out.print("IOException. Please restart.");
+            e.printStackTrace();
+        }
+        }
          public static void readInSA(ArrayList<SalesAssociate> list){
          try{
          String tempUser;
          String tempPassword;
          double totalEarnings;
          Scanner input = new Scanner(System.in);
-         System.out.println("Enter name of file containing the staff information:");
+         System.out.println("Enter name of file containing the Sales Associate information:");
          String fileName = input.next();
          
          File file = new File(fileName+".txt");
          FileInputStream fileIn = new FileInputStream(file);
          
-         input.close();
          Scanner scanIn = new Scanner(fileIn);
             while(scanIn.hasNextLine()){
                 String info = scanIn.nextLine();

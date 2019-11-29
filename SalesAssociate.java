@@ -5,6 +5,7 @@
  */
 package com.mycompany.cpscproject;
 
+import static com.mycompany.cpscproject.Van.createVan;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -29,21 +30,64 @@ public class SalesAssociate extends LoginAccount {
    public void setTotalEarnings(double totalEarnings){
        this.totalEarnings = totalEarnings;
    }
-    public static void printInfo(SalesAssociate sa,Van v, Warehouse warehouseDB, Map<String,BikePart> bpByName) throws IOException{
+    public static void printInfo(SalesAssociate sa, Warehouse warehouseDB, Map<String,BikePart> bpByName) throws IOException{
         ArrayList<Van> fleet = new ArrayList<>();
         Scanner infoScan = new Scanner(System.in);
-        System.out.println("Welcome to the Sales Associate panel. Please enter one of the following: vanAccess, sale, logout, or quit.");
+        System.out.println("Welcome to the Sales Associate panel. Please enter one of the following: vanAccess, sale, or quit.");
         String ans;
         while(infoScan.hasNext()){
             ans = infoScan.next();
             if(ans.equalsIgnoreCase("vanAccess")){
-                vanAccess(sa,v,warehouseDB,fleet);
+                System.out.println("Has your SalesAssociate van been set-up yet? (answer with Y/N)");
+                ans = infoScan.next();
+                if(ans.equalsIgnoreCase("yes")){
+                    System.out.println("Enter van name (must match character at end of Sales Associate ID):");
+                    String vanName = infoScan.next();
+                    int identifier = sa.getUsername().length()-1;
+                    char charAt = sa.getUsername().charAt(identifier);
+                    char charAt2 = vanName.charAt(vanName.length()-1);
+                    if(charAt == charAt2){
+                    Van van = new Van(vanName);
+                    fleet.add(van);
+                    System.out.println(vanName + " has been added to fleet. " + sa.getUsername() + " can now perform transfers using van.");
+                    System.out.println("Transferring to van control panel...");
+                    vanAccess(sa,van,warehouseDB,fleet);
+                    }
+                    else{
+                        System.out.println("Van identifier must match identifier at the end of your username. Please enter the van name again.");
+                        vanName = infoScan.next();
+                    identifier = sa.getUsername().length()-1;
+                    charAt = sa.getUsername().charAt(identifier);
+                    charAt2 = vanName.charAt(vanName.length()-1);
+                    if(charAt == charAt2){
+                    Van van = new Van(vanName);
+                    fleet.add(van);
+                    System.out.println(vanName + " has been added to fleet. SalesAssociate can now perform transfers using van.");
+                    System.out.println("Transferring to van control panel...");
+                    vanAccess(sa,van,warehouseDB,fleet);
+                    }
+                    else{
+                        System.out.println("Second attempt failed. Exiting program for security purposes.");
+                        System.exit(0);
+                    }
+                }
+                }
+                else if(ans.equalsIgnoreCase("no")){
+                    System.out.println("Enter name of van to create files (must match character at end of Sales Associate ID:");
+                    String vanName = infoScan.next();
+                    createVan(vanName);
+                    System.out.println("Empty van files created. SalesAssociate can now acces files to " + vanName + ". Restart program for changes to be applied.");
+                }
+                
             }
             if (ans.equalsIgnoreCase("sale")){
                 sale(warehouseDB,bpByName, sa);
             }
-            if (ans.equalsIgnoreCase("Logout")){
-                System.out.println("Logging out and returning to main menu...");
+            if (ans.equalsIgnoreCase("quit")){
+                System.out.println("Logging out and exiting...");
+                    //inventory.updateWarehouseDB(inventory,warehouseDB, warehouseNumParts);
+                    warehouseDB.printOutWarehouseDB(warehouseDB);
+                    System.exit(0);
             }
             
         }
@@ -52,11 +96,12 @@ public class SalesAssociate extends LoginAccount {
         Scanner vanScan = new Scanner(System.in);
         ArrayList<BikePart> transport = new ArrayList<>();
         ArrayList<BikePart> transport2 = new ArrayList<>();
-        System.out.println("Enter the name of the van you'd like to access:");
-        String option = vanScan.next();
+        //System.out.println("Enter the name of the van you'd like to access:");
+        String option;
+        String userMatch = v.getVanName();
         int identifier = sa.getUsername().length()-1;
         char charAt = sa.getUsername().charAt(identifier);
-        char charAt2 = option.charAt(option.length()-1);
+        char charAt2 = userMatch.charAt(userMatch.length()-1);
         
         if(charAt == charAt2){
             System.out.println("Welcome to van functions, Sales Associate. Please enter  'VantoVan','WarehousetoVan', 'Instructions' for instructions, or Quit to quit");
@@ -74,6 +119,11 @@ public class SalesAssociate extends LoginAccount {
                 String input2 = vanScan.next();
                 Van van1 = searchFleet(input1,fleet);
                 Van van2 = searchFleet(input2,fleet);
+                if(van2 == null){
+                    System.out.println("Van to move parts to was not found in system. Please enter the van name to manually import files into system.");
+                    String van2Name = vanScan.next();
+                    van2 = new Van(van2Name);
+                }
 
                 if (van1 != null && van2 != null){
 
@@ -84,8 +134,18 @@ public class SalesAssociate extends LoginAccount {
                     van1.vanUpdateWarehouse(van1,transport, numPartsVan1);
                     van1.printOutVanWarehouse(van1);
                     van2.printOutVanWarehouse(van2);
-                    System.out.println("Command complete. Enter another command or enter 'Quit' to quit.");
-                    option = vanScan.next();  
+                    System.out.println("Command complete. Enter another command within the vanAccess panel or enter 'Quit' to quit.");
+                    option = vanScan.next(); 
+                    if(option.equalsIgnoreCase("quit")){
+                    System.out.println("Updating and exiting...");
+                    //inventory.updateWarehouseDB(inventory,warehouseDB, warehouseNumParts);
+                    warehouseDB.printOutWarehouseDB(warehouseDB);
+                    System.exit(0);
+                    }
+                }
+                else{
+                    System.out.println("Command unable to execute, van not found. Please restart and make sure both vans are in the system.");
+                    System.exit(0);
                 }
             }
                 if (option.equalsIgnoreCase("warehousetovan")){
@@ -164,14 +224,32 @@ public class SalesAssociate extends LoginAccount {
         }
                 }
     public static Van searchFleet(String input,ArrayList<Van> fleet){
-        Van van = new Van();
         for(int i=0; i < fleet.size(); i++){
             if(input.equals(fleet.get(i).getVanName())){
-                return van = fleet.get(i);
+                return fleet.get(i);
             }
         }
-        System.out.println("Van not found. Please try again.");
+        //System.out.println("Van not found. Pleas");
         return null;
+    }
+    
+    public static void createVanSA(ArrayList<Van> fleet) throws IOException{
+        Scanner vanIn = new Scanner(System.in);
+        System.out.println("Have the files for specified van already been created?");
+        String ans = vanIn.next();
+        if (ans.equalsIgnoreCase("yes")){
+            System.out.println("Enter van name (must match character at end of Sales Associate ID):");
+            String vanName = vanIn.next();
+            Van van = new Van(vanName);
+            fleet.add(van);
+            System.out.println("Van has been added to fleet. SalesAssociate can now perform transfers using van.");
+        }
+        else if (ans.equalsIgnoreCase("no")){
+            System.out.println("Enter name of van to create files (must match character at end of Sales Associate ID:");
+            String vanName = vanIn.next();
+            createVan(vanName);
+            System.out.println("Empty van files created. SalesAssociate can now acces files to " + vanName + ". Restart program for changes to be applied.");
+        }
     }
 }
 
