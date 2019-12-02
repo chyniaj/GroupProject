@@ -84,7 +84,7 @@ public abstract class FunctionTester implements Map {
                 usernameTemp.trim();
                 passwordTemp.trim();
                 if(toLogin.logIn(usernameTemp, passwordTemp).equals("true")){
-                toLogin.printInfo(toLogin, warehouseDB, bpByName);
+                toLogin.printInfo(toLogin, warehouseDB, bpByName, salesAssociates);
             }
                 else{
                     System.out.println("Log-in attempt failed. Please try again.");

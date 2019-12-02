@@ -5,7 +5,10 @@
  */
 package com.mycompany.cpscproject;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
@@ -29,7 +32,7 @@ public class SystemAdministrator extends LoginAccount {
     }
     public static void printInfo(ArrayList<OfficeManager> officeManagers, ArrayList<SalesAssociate> salesAssociates, ArrayList<WarehouseManager> warehouseManagers, Map<String,WarehouseManager> wmByUser, Map<String,OfficeManager> omByUser, Map<String,SalesAssociate> saByUser, ArrayList<Van> fleet) throws IOException{
      Scanner infoScan = new Scanner(System.in);
-        System.out.println("Welcome to the System Admin panel. Please enter one of the following: CreateStaff, ResetPassword, Logout, or Quit.");
+        System.out.println("Welcome to the System Admin panel. Please enter one of the following: CreateStaff, ResetPassword, or Quit.");
         String ans;
         while(infoScan.hasNext()){
             ans = infoScan.next();
@@ -45,21 +48,35 @@ public class SystemAdministrator extends LoginAccount {
                 else if(ans.equalsIgnoreCase("WarehouseManager")){
                     createWarehouseManager(warehouseManagers);
                 }
-                System.out.println("Enter another command or 'quit'");
+                System.out.println("Welcome back to the System Admin panel. Please enter one of the following: CreateStaff, ResetPassword, or Quit.");
                 ans = infoScan.next();
-                if(ans.equalsIgnoreCase("quit")){
+                if(ans.equalsIgnoreCase("Quit")){
+                    System.out.println("Logging out and exiting...");
+                    printOutWM(warehouseManagers);
+                    printOutSA(salesAssociates);
+                    printOutOM(officeManagers);
+                    System.exit(0);
                     
                 }
             }
             else if (ans.equalsIgnoreCase("ResetPassword")){
                 resetPassword(salesAssociates,warehouseManagers,officeManagers,wmByUser,omByUser,saByUser);
+                System.out.println("Welcome back to the System Admin panel. Please enter one of the following: CreateStaff, ResetPassword, or Quit.");
+                ans = infoScan.next();
+                if(ans.equalsIgnoreCase("Quit")){
+                    System.out.println("Logging out and exiting...");
+                    printOutWM(warehouseManagers);
+                    printOutSA(salesAssociates);
+                    printOutOM(officeManagers);
+                    System.exit(0);
+                }
             }
-            else if (ans.equalsIgnoreCase("Logout")){
-                System.out.println("Logging out and returning to main menu...");
-                 
-            }
-            else if(ans.equalsIgnoreCase("quit")){
-                
+            else if(ans.equalsIgnoreCase("Quit")){
+                System.out.println("Logging out and exiting...");
+                    printOutWM(warehouseManagers);
+                    printOutSA(salesAssociates);
+                    printOutOM(officeManagers);
+                    System.exit(0);
             }
             
         }
@@ -80,6 +97,32 @@ public class SystemAdministrator extends LoginAccount {
             saByUser.remove(temp.getUsername());
             saList.add(update);
             saByUser.put(update.getUsername(),update);
+            System.out.println("New password for "+ temp.getUsername()+ " is "+ ans);
+        }
+        else if(ans.equalsIgnoreCase("OfficeManager")){
+            System.out.println("Please enter the username of the team member whose password needs to be reset:");
+            ans = resetIn.next();
+            OfficeManager temp = searchStaffOM(ans,omList);
+            System.out.println("Enter new password:");
+            ans = resetIn.next();
+            OfficeManager update = new OfficeManager(temp.getUsername(), ans);
+            omList.remove(temp);
+            omByUser.remove(temp.getUsername());
+            omList.add(update);
+            omByUser.put(update.getUsername(),update);
+            System.out.println("New password for "+ temp.getUsername()+ " is "+ ans);
+        }
+        else if (ans.equalsIgnoreCase("WarehouseManager")){
+            System.out.println("Please enter the username of the team member whose password needs to be reset:");
+            ans = resetIn.next();
+            WarehouseManager temp = searchStaffWM(ans,wmList);
+            System.out.println("Enter new password:");
+            ans = resetIn.next();
+            WarehouseManager update = new WarehouseManager(temp.getUsername(), ans);
+            wmList.remove(temp);
+            wmByUser.remove(temp.getUsername());
+            wmList.add(update);
+            wmByUser.put(update.getUsername(),update);
             System.out.println("New password for "+ temp.getUsername()+ " is "+ ans);
         }
         
@@ -118,13 +161,13 @@ public class SystemAdministrator extends LoginAccount {
      //   return wm;
     }
     
-    public static LoginAccount searchStaff(String input,ArrayList<LoginAccount> list){
+    public static WarehouseManager searchStaffWM(String input,ArrayList<WarehouseManager> list){
         for(int i=0; i <list.size(); i++){
             if(input.equals(list.get(i).getUsername())){
                 return list.get(i);
             }
         }
-        System.out.println("Van not found. Please try again.");
+        System.out.println("Warehouse Manager not found. Please try again.");
         return null;
     }
     
@@ -134,7 +177,17 @@ public class SystemAdministrator extends LoginAccount {
                 return list.get(i);
             }
         }
-        System.out.println("Van not found. Please try again.");
+        System.out.println("Sales Associate not found. Please try again.");
+        return null;
+    }
+    
+    public static OfficeManager searchStaffOM(String input,ArrayList<OfficeManager> list){
+        for(int i=0; i <list.size(); i++){
+            if(input.equals(list.get(i).getUsername())){
+                return list.get(i);
+            }
+        }
+        System.out.println("Office Manager not found. Please try again.");
         return null;
     }
 }

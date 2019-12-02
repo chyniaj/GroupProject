@@ -23,9 +23,9 @@ import java.util.Scanner;
  */
 public class LoginAccount 
 {
-    private Person person;
     private String username;
     private byte[] password;
+    private String passwordHolder;
      Random r = new Random();
      byte[] nbyte = new byte[32];
 
@@ -35,6 +35,7 @@ public class LoginAccount
     }
     public LoginAccount(String username, String password) {
         //this.person = person;
+        this.passwordHolder = password;
         this.username = username;
         r.nextBytes(nbyte);
         this.password = hashPassword(password.toCharArray(),nbyte,5,256);
@@ -46,6 +47,10 @@ public class LoginAccount
 
     public byte[] getPassword(){
         return this.password;
+    }
+    
+    public String getPasswordHolder(){
+        return this.passwordHolder;
     }
     
 
@@ -78,11 +83,11 @@ public class LoginAccount
          try{
          String tempUser;
          String tempPassword;
-         Scanner input = new Scanner(System.in);
-         System.out.println("Enter name of file containing the Warehouse Manager information:");
-         String fileName = input.next();
+         //Scanner input = new Scanner(System.in);
+         //System.out.println("Enter name of file containing the Warehouse Manager information:");
+         //String fileName = input.next();
          
-         File file = new File(fileName+".txt");
+         File file = new File("WarehouseManagers.txt");
          FileInputStream fileIn = new FileInputStream(file);
          
          Scanner scanIn = new Scanner(fileIn);
@@ -111,11 +116,11 @@ public class LoginAccount
          try{
          String tempUser;
          String tempPassword;
-         Scanner input = new Scanner(System.in);
-         System.out.println("Enter name of file containing the Office Manager information:");
-         String fileName = input.next();
+         //Scanner input = new Scanner(System.in);
+         //System.out.println("Enter name of file containing the Office Manager information:");
+         //String fileName = input.next();
          
-         File file = new File(fileName+".txt");
+         File file = new File("OfficeManagers.txt");
          FileInputStream fileIn = new FileInputStream(file);
          
          Scanner scanIn = new Scanner(fileIn);
@@ -144,11 +149,11 @@ public class LoginAccount
          String tempUser;
          String tempPassword;
          double totalEarnings;
-         Scanner input = new Scanner(System.in);
-         System.out.println("Enter name of file containing the Sales Associate information:");
-         String fileName = input.next();
+         //Scanner input = new Scanner(System.in);
+         //System.out.println("Enter name of file containing the Sales Associate information:");
+         //String fileName = input.next();
          
-         File file = new File(fileName+".txt");
+         File file = new File("SalesAssociates.txt");
          FileInputStream fileIn = new FileInputStream(file);
          
          Scanner scanIn = new Scanner(fileIn);
@@ -176,10 +181,41 @@ public class LoginAccount
         }
 
      }
-     
-     public static void printOutStaff(ArrayList<LoginAccount> staff) throws FileNotFoundException{
-         FileOutputStream fileOut = new FileOutputStream("SalesInvoice.txt");
+         public static void printOutWM(ArrayList<WarehouseManager> staff) throws FileNotFoundException, IOException{
+         //Scanner scanOut = new Scanner(System.in);
+         //System.out.println("Please enter the name of them Warehouse Manager information file you wish to update (do not include .txt)");
+         //String ans = scanOut.next();
+         FileOutputStream fileOut = new FileOutputStream("WarehouseManagers.txt");
          PrintWriter out = new PrintWriter(fileOut);
+         for (int i = 0; i< staff.size(); i++){
+             out.println(staff.get(i).getUsername() + "," + staff.get(i).getPasswordHolder());
+         }
+         out.flush();
+        fileOut.close();
+     }
+         public static void printOutOM(ArrayList<OfficeManager> staff) throws FileNotFoundException, IOException{
+         //Scanner scanOut = new Scanner(System.in);
+         //System.out.println("Please enter the name of the Office Manager information file you wish to update (do not include .txt)");
+         //String ans = scanOut.next();
+         FileOutputStream fileOut = new FileOutputStream("OfficeManagers.txt");
+         PrintWriter out = new PrintWriter(fileOut);
+         for (int i = 0; i< staff.size(); i++){
+             out.println(staff.get(i).getUsername() + "," + staff.get(i).getPasswordHolder());
+         }
+         out.flush();
+        fileOut.close();
+     }
+         public static void printOutSA(ArrayList<SalesAssociate> staff) throws FileNotFoundException, IOException{
+         //Scanner scanOut = new Scanner(System.in);
+         //System.out.println("Please enter the name of the Sales Associate information file you wish to update (do not include .txt)");
+         //String ans = scanOut.next()
+         FileOutputStream fileOut = new FileOutputStream("SalesAssociates.txt");
+         PrintWriter out = new PrintWriter(fileOut);
+         for (int i = 0; i< staff.size(); i++){
+             out.println(staff.get(i).getUsername() + "," + staff.get(i).getPasswordHolder() + "," + staff.get(i).getTotalEarnings());
+         }
+         out.flush();
+        fileOut.close();
      }
 }
         

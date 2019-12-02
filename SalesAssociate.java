@@ -30,7 +30,7 @@ public class SalesAssociate extends LoginAccount {
    public void setTotalEarnings(double totalEarnings){
        this.totalEarnings = totalEarnings;
    }
-    public static void printInfo(SalesAssociate sa, Warehouse warehouseDB, Map<String,BikePart> bpByName) throws IOException{
+    public static void printInfo(SalesAssociate sa, Warehouse warehouseDB, Map<String,BikePart> bpByName, ArrayList<SalesAssociate> salesAssociates) throws IOException{
         ArrayList<Van> fleet = new ArrayList<>();
         Scanner infoScan = new Scanner(System.in);
         System.out.println("Welcome to the Sales Associate panel. Please enter one of the following: vanAccess, sale, or quit.");
@@ -76,17 +76,38 @@ public class SalesAssociate extends LoginAccount {
                     System.out.println("Enter name of van to create files (must match character at end of Sales Associate ID:");
                     String vanName = infoScan.next();
                     createVan(vanName);
-                    System.out.println("Empty van files created. SalesAssociate can now acces files to " + vanName + ". Restart program for changes to be applied.");
+                    System.out.println("Empty van files created. "+ sa.getUsername() + " can now acces files to " + vanName + ". Refreshing program for changes to be applied...");
+                    System.exit(0);
                 }
+                System.out.println("Welcome back to the Sales Associate panel. Please enter one of the following: vanAccess, sale, or quit.");
+                ans = infoScan.next();
+                if(ans.equalsIgnoreCase("quit")){
+                    System.out.println("Logging out and exiting...");
+                    //inventory.updateWarehouseDB(inventory,warehouseDB, warehouseNumParts);
+                    warehouseDB.printOutWarehouseDB(warehouseDB);
+                    printOutSA(salesAssociates);
+                    System.exit(0);
                 
+            }
             }
             if (ans.equalsIgnoreCase("sale")){
                 sale(warehouseDB,bpByName, sa);
+                System.out.println("Welcome back to the Sales Associate panel. Please enter one of the following: vanAccess, sale, or quit.");
+                ans = infoScan.next();
+                if(ans.equalsIgnoreCase("quit")){
+                    System.out.println("Logging out and exiting...");
+                    //inventory.updateWarehouseDB(inventory,warehouseDB, warehouseNumParts);
+                    warehouseDB.printOutWarehouseDB(warehouseDB);
+                    printOutSA(salesAssociates);
+                    System.exit(0);
+                }
+                
             }
             if (ans.equalsIgnoreCase("quit")){
                 System.out.println("Logging out and exiting...");
                     //inventory.updateWarehouseDB(inventory,warehouseDB, warehouseNumParts);
                     warehouseDB.printOutWarehouseDB(warehouseDB);
+                    printOutSA(salesAssociates);
                     System.exit(0);
             }
             
@@ -113,19 +134,20 @@ public class SalesAssociate extends LoginAccount {
                     option = vanScan.next();
                 }
                 if(option.equalsIgnoreCase("VantoVan")){
-                System.out.println("Enter the name of the van you'd like to move parts to:");
-                String input1 = vanScan.next();
+                //System.out.println("Enter the name of the van you'd like to move parts to:");
+                //String input1 = vanScan.next();
+                System.out.println("Performing van to van transfer using " + userMatch + ".");
                 System.out.println("Enter the name of the van you'd like to take parts from:");
                 String input2 = vanScan.next();
-                Van van1 = searchFleet(input1,fleet);
+                Van van1 = searchFleet(userMatch,fleet);
                 Van van2 = searchFleet(input2,fleet);
-                if(van2 == null){
+                    if(van2 == null){
                     System.out.println("Van to move parts to was not found in system. Please enter the van name to manually import files into system.");
                     String van2Name = vanScan.next();
                     van2 = new Van(van2Name);
                 }
 
-                if (van1 != null && van2 != null){
+                    if (van1 != null && van2 != null){
 
                     int numPartsVan2 =van2.getWarehouse().size();
                     int numPartsVan1= van1.getWarehouse().size();
@@ -134,10 +156,10 @@ public class SalesAssociate extends LoginAccount {
                     van1.vanUpdateWarehouse(van1,transport, numPartsVan1);
                     van1.printOutVanWarehouse(van1);
                     van2.printOutVanWarehouse(van2);
-                    System.out.println("Command complete. Enter another command within the vanAccess panel or enter 'Quit' to quit.");
+                    System.out.println("Van to van transfer complete. Enter another command within the vanAccess panel or enter 'Quit' to quit.");
                     option = vanScan.next(); 
                     if(option.equalsIgnoreCase("quit")){
-                    System.out.println("Updating and exiting...");
+                    System.out.println("Logging out and exiting...");
                     //inventory.updateWarehouseDB(inventory,warehouseDB, warehouseNumParts);
                     warehouseDB.printOutWarehouseDB(warehouseDB);
                     System.exit(0);
@@ -149,14 +171,24 @@ public class SalesAssociate extends LoginAccount {
                 }
             }
                 if (option.equalsIgnoreCase("warehousetovan")){
-                System.out.println("Enter the name of the van you'd like to move parts to:");
-                String input1 = vanScan.next();
-                Van van1 = searchFleet(input1,fleet);
+                //System.out.println("Enter the name of the van you'd like to move parts to:");
+                //option = vanScan.next();
+                System.out.println("Performing warehouse to van transfer using " + userMatch + ".");
+                
+                Van van1 = searchFleet(userMatch,fleet);
                 if (van1 != null){
                     int numPartsVan = van1.getNumParts();
                     van1.mainToVanComparison(van1,warehouseDB,transport2);
                     van1.updateVanhouseDB(van1,transport2, numPartsVan);
                     van1.printOutVanWarehouse(van1);
+                    }
+                System.out.println("Warehouse to van transfer complete. Enter another command within the vanAccess panel or enter 'Quit' to quit.");
+                    option = vanScan.next(); 
+                    if(option.equalsIgnoreCase("quit")){
+                    System.out.println("Logging out and exiting...");
+                    //inventory.updateWarehouseDB(inventory,warehouseDB, warehouseNumParts);
+                    warehouseDB.printOutWarehouseDB(warehouseDB);
+                    System.exit(0);
                     }
                 }
             }
@@ -204,8 +236,10 @@ public class SalesAssociate extends LoginAccount {
                 }
             }
         }
-        
-        System.out.println("Parts have been removed from Warehouse and saes have been credited to "+ sa.getUsername() +". Preparing Sales Invoice:");
+                if (selling.size() == 0){
+            System.out.println("No parts that were entered exist in the Warehouse, an Invoice will not be printed and " + sa.getUsername() + " will receive no earnings. Returning to Sales Associate panel.");
+        }
+                else{
         SalesInvoice invoice = new SalesInvoice(selling);
         double totalCost = 0;
         for(int i=0;i < invoice.getInvoice().size(); i++){
@@ -215,14 +249,17 @@ public class SalesAssociate extends LoginAccount {
             else{
                 totalCost = totalCost + invoice.getInvoice().get(i).getQuantity() * invoice.getInvoice().get(i).getListPrice();
             }
-        }
+        }        
+        System.out.println("Parts have been removed from Warehouse and " + totalCost + " has been credited to "+ sa.getUsername() +". Printing Sales Invoice...");
+        
         sa.setTotalEarnings(totalCost);
         invoice.printSalesInvoice(invoice);
-        
-        if (selling.size() == 0){
-            System.out.println("No parts that were entered exist in the Warehouse, an Invoice will not be printed. Returning to main menu.");
-        }
                 }
+        
+
+    }
+    
+    
     public static Van searchFleet(String input,ArrayList<Van> fleet){
         for(int i=0; i < fleet.size(); i++){
             if(input.equals(fleet.get(i).getVanName())){
