@@ -1,4 +1,4 @@
-package com.mycompany.cpscproject;
+package com.company;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,13 +21,13 @@ import java.util.Scanner;
  * @author Chy and Kerri
  * @version 1
  */
-public class LoginAccount 
+public class LoginAccount
 {
     private String username;
     private byte[] password;
     private String passwordHolder;
-     Random r = new Random();
-     byte[] nbyte = new byte[32];
+    Random r = new Random();
+    byte[] nbyte = new byte[32];
 
 
     public LoginAccount(){
@@ -48,27 +48,40 @@ public class LoginAccount
     public byte[] getPassword(){
         return this.password;
     }
-    
+
     public String getPasswordHolder(){
         return this.passwordHolder;
     }
-    
 
+    /**
+     * This method hashes a password so it is more private
+     * @param password
+     * @param salt
+     * @param iterations
+     * @param keyLength
+     * @return
+     */
     public static byte[] hashPassword( final char[] password, final byte[] salt, final int iterations, final int keyLength ) {
         try{
-        SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
-        PBEKeySpec spec = new PBEKeySpec( password, salt, iterations, keyLength );
-        SecretKey key = skf.generateSecret( spec );
-        byte[] res = key.getEncoded( );
-        return res;
-    
-    } 
-    catch( NoSuchAlgorithmException | InvalidKeySpecException e ) {
-        throw new RuntimeException( e );
+            SecretKeyFactory skf = SecretKeyFactory.getInstance( "PBKDF2WithHmacSHA512" );
+            PBEKeySpec spec = new PBEKeySpec( password, salt, iterations, keyLength );
+            SecretKey key = skf.generateSecret( spec );
+            byte[] res = key.getEncoded( );
+            return res;
+
+        }
+        catch( NoSuchAlgorithmException | InvalidKeySpecException e ) {
+            throw new RuntimeException( e );
+        }
     }
-    }
-    
-     public String logIn(String userName, String Password){
+
+    /**
+     * This method is used to log in each person to their respective accounts.
+     * @param userName
+     * @param Password
+     * @return
+     */
+    public String logIn(String userName, String Password){
         String logIn = "false";
         byte[] newPass = hashPassword(Password.toCharArray(),nbyte,5,256);
         if ((username.equals(this.getUsername())) && (Arrays.equals(this.password, newPass))) {
@@ -78,19 +91,25 @@ public class LoginAccount
         else{
             return logIn;
         }
-}
-     public static void readInWM(ArrayList<WarehouseManager> warehouseManagers) throws IOException{
-         try{
-         String tempUser;
-         String tempPassword;
-         //Scanner input = new Scanner(System.in);
-         //System.out.println("Enter name of file containing the Warehouse Manager information:");
-         //String fileName = input.next();
-         
-         File file = new File("WarehouseManagers.txt");
-         FileInputStream fileIn = new FileInputStream(file);
-         
-         Scanner scanIn = new Scanner(fileIn);
+    }
+
+    /**
+     * This method reads in the Warehouse Managers file
+     * @param warehouseManagers
+     * @throws IOException
+     */
+    public static void readInWM(ArrayList<WarehouseManager> warehouseManagers) throws IOException{
+        try{
+            String tempUser;
+            String tempPassword;
+            //Scanner input = new Scanner(System.in);
+            //System.out.println("Enter name of file containing the Warehouse Manager information:");
+            //String fileName = input.next();
+
+            File file = new File("WarehouseManagers.txt");
+            FileInputStream fileIn = new FileInputStream(file);
+
+            Scanner scanIn = new Scanner(fileIn);
             while(scanIn.hasNextLine()){
                 String info = scanIn.nextLine();
                 info = info.trim();
@@ -101,29 +120,34 @@ public class LoginAccount
                 warehouseManagers.add(staff);
             }
             fileIn.close();
-         }
-            catch (FileNotFoundException e){
-            System.out.println("File Not Found. Please restart and enter new file name.");
+        }
+        catch(FileNotFoundException e){
+            System.out.println("File Not found. Please restart and enter new file name.");
             e.printStackTrace();
         }
-        catch (IOException e){
-            System.out.print("IOException. Please restart.");
+        catch(IOException e){
+            System.out.println("IOException. Please restart.");
             e.printStackTrace();
         }
-        }
-     
-          public static void readInOM(ArrayList<OfficeManager> list) throws IOException{
-         try{
-         String tempUser;
-         String tempPassword;
-         //Scanner input = new Scanner(System.in);
-         //System.out.println("Enter name of file containing the Office Manager information:");
-         //String fileName = input.next();
-         
-         File file = new File("OfficeManagers.txt");
-         FileInputStream fileIn = new FileInputStream(file);
-         
-         Scanner scanIn = new Scanner(fileIn);
+    }
+
+    /**
+     * This method reads in the Office Managers file.
+     * @param list
+     * @throws IOException
+     */
+    public static void readInOM(ArrayList<OfficeManager> list) throws IOException{
+        try{
+            String tempUser;
+            String tempPassword;
+            //Scanner input = new Scanner(System.in);
+            //System.out.println("Enter name of file containing the Office Manager information:");
+            //String fileName = input.next();
+
+            File file = new File("OfficeManagers.txt");
+            FileInputStream fileIn = new FileInputStream(file);
+
+            Scanner scanIn = new Scanner(fileIn);
             while(scanIn.hasNextLine()){
                 String info = scanIn.nextLine();
                 info = info.trim();
@@ -134,29 +158,35 @@ public class LoginAccount
                 list.add(staff);
             }
             fileIn.close();
-         }
-            catch (FileNotFoundException e){
-            System.out.println("File Not Found. Please restart and enter new file name.");
+        }
+        catch(FileNotFoundException e){
+            System.out.println("File Not found. Please restart and enter new file name.");
             e.printStackTrace();
         }
-        catch (IOException e){
-            System.out.print("IOException. Please restart.");
+        catch(IOException e){
+            System.out.println("IOException. Please restart.");
             e.printStackTrace();
         }
-        }
-         public static void readInSA(ArrayList<SalesAssociate> list){
-         try{
-         String tempUser;
-         String tempPassword;
-         double totalEarnings;
-         //Scanner input = new Scanner(System.in);
-         //System.out.println("Enter name of file containing the Sales Associate information:");
-         //String fileName = input.next();
-         
-         File file = new File("SalesAssociates.txt");
-         FileInputStream fileIn = new FileInputStream(file);
-         
-         Scanner scanIn = new Scanner(fileIn);
+    }
+
+    /**
+     * This file reads in the Sales Associates file.
+     * @param list
+     */
+    public static void readInSA(ArrayList<SalesAssociate> list){
+        try{
+            String tempUser;
+            String tempPassword;
+            double totalEarnings;
+            //Scanner input = new Scanner(System.in);
+           // System.out.println("Enter name of file containing the Sales Associate information:");
+            //String fileName = input.next();
+
+            File file = new File("SalesAssociates.txt");
+            FileInputStream fileIn = new FileInputStream(file);
+
+
+            Scanner scanIn = new Scanner(fileIn);
             while(scanIn.hasNextLine()){
                 String info = scanIn.nextLine();
                 info = info.trim();
@@ -170,7 +200,7 @@ public class LoginAccount
             }
             fileIn.close();
         }
-        
+
         catch (FileNotFoundException e){
             System.out.println("File Not Found. Please restart and enter new file name.");
             e.printStackTrace();
@@ -180,42 +210,62 @@ public class LoginAccount
             e.printStackTrace();
         }
 
-     }
-         public static void printOutWM(ArrayList<WarehouseManager> staff) throws FileNotFoundException, IOException{
-         //Scanner scanOut = new Scanner(System.in);
-         //System.out.println("Please enter the name of them Warehouse Manager information file you wish to update (do not include .txt)");
-         //String ans = scanOut.next();
-         FileOutputStream fileOut = new FileOutputStream("WarehouseManagers.txt");
-         PrintWriter out = new PrintWriter(fileOut);
-         for (int i = 0; i< staff.size(); i++){
-             out.println(staff.get(i).getUsername() + "," + staff.get(i).getPasswordHolder());
-         }
-         out.flush();
+    }
+
+    /**
+     * This method prints out to the Warehouse Managers' file.
+     * @param staff
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static void printOutWM(ArrayList<WarehouseManager> staff) throws FileNotFoundException, IOException{
+        //Scanner scanOut = new Scanner(System.in);
+        //System.out.println("Please enter the name of them Warehouse Manager information file you wish to update (do not include .txt)");
+        //String ans = scanOut.next();
+        FileOutputStream fileOut = new FileOutputStream("WarehouseManagers.txt");
+        PrintWriter out = new PrintWriter(fileOut);
+        for (int i = 0; i< staff.size(); i++){
+            out.println(staff.get(i).getUsername() + "," + staff.get(i).getPasswordHolder());
+        }
+        out.flush();
         fileOut.close();
-     }
-         public static void printOutOM(ArrayList<OfficeManager> staff) throws FileNotFoundException, IOException{
-         //Scanner scanOut = new Scanner(System.in);
-         //System.out.println("Please enter the name of the Office Manager information file you wish to update (do not include .txt)");
-         //String ans = scanOut.next();
-         FileOutputStream fileOut = new FileOutputStream("OfficeManagers.txt");
-         PrintWriter out = new PrintWriter(fileOut);
-         for (int i = 0; i< staff.size(); i++){
-             out.println(staff.get(i).getUsername() + "," + staff.get(i).getPasswordHolder());
-         }
-         out.flush();
+    }
+
+    /**
+     * This method prints out to the Office Managers' file.
+     * @param staff
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static void printOutOM(ArrayList<OfficeManager> staff) throws FileNotFoundException, IOException{
+        //Scanner scanOut = new Scanner(System.in);
+        //System.out.println("Please enter the name of the Office Manager information file you wish to update (do not include .txt)");
+        //String ans = scanOut.next();
+        FileOutputStream fileOut = new FileOutputStream("OfficeManagers.txt");
+        PrintWriter out = new PrintWriter(fileOut);
+        for (int i = 0; i< staff.size(); i++){
+            out.println(staff.get(i).getUsername() + "," + staff.get(i).getPasswordHolder());
+        }
+        out.flush();
         fileOut.close();
-     }
-         public static void printOutSA(ArrayList<SalesAssociate> staff) throws FileNotFoundException, IOException{
-         //Scanner scanOut = new Scanner(System.in);
-         //System.out.println("Please enter the name of the Sales Associate information file you wish to update (do not include .txt)");
-         //String ans = scanOut.next()
-         FileOutputStream fileOut = new FileOutputStream("SalesAssociates.txt");
-         PrintWriter out = new PrintWriter(fileOut);
-         for (int i = 0; i< staff.size(); i++){
-             out.println(staff.get(i).getUsername() + "," + staff.get(i).getPasswordHolder() + "," + staff.get(i).getTotalEarnings());
-         }
-         out.flush();
+    }
+
+    /**
+     * This method prints out the Sales Associates' file.
+     * @param staff
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static void printOutSA(ArrayList<SalesAssociate> staff) throws FileNotFoundException, IOException{
+        //Scanner scanOut = new Scanner(System.in);
+        //System.out.println("Please enter the name of the Sales Associate information file you wish to update (do not include .txt)");
+        //String ans = scanOut.next()
+        FileOutputStream fileOut = new FileOutputStream("SalesAssociates.txt");
+        PrintWriter out = new PrintWriter(fileOut);
+        for (int i = 0; i< staff.size(); i++){
+            out.println(staff.get(i).getUsername() + "," + staff.get(i).getPasswordHolder() + "," + staff.get(i).getTotalEarnings());
+        }
+        out.flush();
         fileOut.close();
-     }
+    }
 }
-        
