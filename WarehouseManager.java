@@ -8,8 +8,16 @@ public class WarehouseManager extends LoginAccount {
     public WarehouseManager(String username, String password){
         super(username,password);
     }
-    public void printInfo(Map<String, BikePart> bpByPartName, Map<Integer, BikePart> bpByPartNumber) throws IOException {
-        Warehouse warehouseDB = new Warehouse();
+
+    /**
+     * This method prints out info that would be for the commands
+     * @param wm
+     * @param warehouseDB
+     * @param bpByName
+     * @param bpByNumber
+     * @throws IOException
+     */
+    public void printInfo(WarehouseManager wm, Warehouse warehouseDB, Map<String, BikePart> bpByName, Map<Integer, BikePart> bpByNumber) throws IOException {
         Inventory inventory = new Inventory();
         int warehouseNumParts = inventory.getNumParts();
         Scanner start = new Scanner(System.in);
@@ -38,7 +46,7 @@ public class WarehouseManager extends LoginAccount {
                     System.exit(0);
                 }
             } else if (userInput.equalsIgnoreCase("Display")) {
-                display(bpByPartName,bpByPartNumber);
+                display(bpByName,bpByNumber);
 
                 System.out.println("Command Complete. Enter another command or enter 'Quit' to quit.");
                 input = start.next();
@@ -54,7 +62,14 @@ public class WarehouseManager extends LoginAccount {
             }
         }
     }
-    public void display(Map<String,BikePart> bpByPartName, Map<Integer, BikePart> bpByPartNum) throws IOException{
+
+    /**
+     * This method displays the parts that are in the warehouse.
+     * @param bpByName
+     * @param bpByNumber
+     * @throws IOException
+     */
+    public void display(Map<String,BikePart> bpByName, Map<Integer, BikePart> bpByNumber) throws IOException{
         Warehouse warehouseDB = new Warehouse();
         Inventory inventory = new Inventory();
         int warehouseNumParts = inventory.getNumParts();
@@ -65,13 +80,13 @@ public class WarehouseManager extends LoginAccount {
             System.out.println("Enter the name of the part you would like to search:"); //make sure case sensitive names are capitalized
             String name = start.next();
             BikePart bp;
-            bp = bpByPartName.get(name);
+            bp = bpByName.get(name);
             bp.printInfo();
         } else if(input.equalsIgnoreCase("Number")){
             System.out.println("Enter the number of the part you would like to search:");
             Integer num = start.nextInt();
             BikePart bp;
-            bp = bpByPartNum.get(num);
+            bp = bpByNumber.get(num);
             bp.printInfo();
         }
     }
